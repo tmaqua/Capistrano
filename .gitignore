@@ -1,0 +1,59 @@
+### Vim ###
+[._]*.s[a-w][a-z]
+[._]s[a-w][a-z]
+*.un~
+Session.vim
+.netrwhist
+*~
+
+
+### Rails ###
+# Bundler config
+/.bundle
+
+# Bundler gems
+vendor/bundle
+vendor/bundler
+vendor/assets/bower_components
+
+# SQLite database.
+/db/*.sqlite3
+/db/*.sqlite3-journal
+
+# Logfiles and Tempfiles.
+/log
+/log/*.log
+/tmp
+*.log
+
+# Other unneeded files.
+doc/
+*.swp
+*~
+.project
+.DS_Store
+.idea
+.secret
+*.rbc
+capybara-*.html
+.rspec
+/coverage/
+/spec/tmp
+**.orig
+rerun.txt
+pickle-email-*.html
+.rvmrc
+
+# Settings
+config/settings.local.yml
+config/settings/*.local.yml
+config/environments/*.local.yml
+
+# Public files
+public/assets
+public/system
+public/uploads/*
+
+# Environment Variables
+.rbenv-vars
+.env

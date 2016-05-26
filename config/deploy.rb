@@ -70,6 +70,3 @@ namespace :deploy do
     end
   end
 end
-
-# before "deploy:updated", "deploy:set_env_values"
-# after "deploy:publishing", "deploy:restart"

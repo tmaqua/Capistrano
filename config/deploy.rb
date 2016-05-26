@@ -1,8 +1,8 @@
 lock '3.4.0'
 
-set :application, ENV['APPLICATION'] || "Capistrano"
-set :repo_url, ENV['REPO_URL'] || "git@github.com:tmaqua/Capistrano.git"
-set :branch, ENV['BRANCH'] || "master"
+set :application, "Capistrano"
+set :repo_url, "git@github.com:tmaqua/Capistrano.git"
+set :branch, "master"
 set :deploy_to, "/var/www/rails/Capistrano"
 
 # Default value for :scm is :git

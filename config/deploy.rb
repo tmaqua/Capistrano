@@ -22,7 +22,7 @@ set :deploy_to, "/var/www/rails/Capistrano"
 # set :linked_files, fetch(:linked_files, []).push('config/settings/production.yml')
 
 # Default value for linked_dirs is []
-set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
+set :linked_dirs, fetch(:linked_dirs, []).push('.env', 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -42,15 +42,15 @@ set :unicorn_pid, -> { "#{shared_path}/tmp/pids/unicorn.pid" }
 set :unicorn_config_path, "config/unicorn.conf.rb"
 
 namespace :deploy do
-  desc "Set Environment Values"
-  task :set_env_values do
-    on roles(:all) do
-      within release_path do
-        env_config = "/var/www/rails/Capistrano/shared/.env"
-        execute :cp, "#{env_config} ./.env"
-      end
-    end
-  end
+  # desc "Set Environment Values"
+  # task :set_env_values do
+  #   on roles(:all) do
+  #     within release_path do
+  #       env_config = "/var/www/rails/Capistrano/shared/.env"
+  #       execute :cp, "#{env_config} ./.env"
+  #     end
+  #   end
+  # end
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
@@ -59,7 +59,7 @@ namespace :deploy do
   end
 
   after :publishing, :restart
-  before :updated, :set_env_values
+  # before :updated, :set_env_values
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do

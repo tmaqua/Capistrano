@@ -7,7 +7,7 @@
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
-server 'www.fankami.com', user: 'fankami', roles: %w{app db web}
+server '52.68.208.114', user: 'fankami', roles: %w{app db web}
 set :ssh_options, {
     keys: %w(~/.ssh/aws.fankami/aws_fankami),
     forward_agent: true,

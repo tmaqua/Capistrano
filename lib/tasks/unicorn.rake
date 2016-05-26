@@ -29,7 +29,7 @@ def unicorn_signal(signal)
 end
 
 def unicorn_pid
-  File.read('shared/tmp/pids/unicorn.pid').to_i
+  File.read('/var/www/rails/Capistrano/shared/tmp/pids/unicorn.pid').to_i
 rescue Errno::ENOENT
   raise 'Unicorn does not seem to be running'
 end

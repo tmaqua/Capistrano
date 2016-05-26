@@ -1,16 +1,9 @@
-# config valid only for current version of Capistrano
 lock '3.4.0'
 
-set :application, 'RailsTemplate'
-set :repo_url, 'git@github.com:tmaqua/MyRailsTemplate4.2.3.git'
-
-# Default branch is :master
-# ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
-set :branch, 'master'
-
-# Default deploy_to directory is /var/www/my_app_name
-# set :deploy_to, '/var/www/my_app_name'
-set :deploy_to, '/var/www/project/RailsTemplate'
+set :application, ENV['APPLICATION'] || "Capistrano"
+set :repo_url, ENV['REPO_URL'] || "git@github.com:tmaqua/Capistrano.git"
+set :branch, ENV['BRANCH'] || "master"
+set :deploy_to, "/var/www/rails/#{fetch(:application)}"
 
 # Default value for :scm is :git
 # set :scm, :git
@@ -29,7 +22,6 @@ set :deploy_to, '/var/www/project/RailsTemplate'
 # set :linked_files, fetch(:linked_files, []).push('config/settings/production.yml')
 
 # Default value for linked_dirs is []
-# set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
 
 # Default value for default_env is {}
@@ -39,34 +31,36 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', '
 set :keep_releases, 5
 
 set :rbenv_ruby, '2.2.0'
-set :rbenv_path, '/home/fankami/.rbenv'
+# set :rbenv_path, '/home/fankami/.rbenv'
+set :rbenv_type, :user
+set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
+# set :rbenv_prefix, "#{fetch(:rbenv_path)}/bin/rbenv exec"
+set :rbenv_map_bins, %w{rake gem bundle ruby rails}
+set :rbenv_roles, :all
+
+set :unicorn_pid, -> { "#{shared_path}/tmp/pids/unicorn.pid" }
+set :unicorn_config_path, "config/unicorn.conf.rb"
 
 namespace :deploy do
+  desc "Set Environment Values"
+  task :set_env_values do
+    on roles(:all) do
+      within release_path do
+        env_config = "/var/www/rails/Capistrano/shared/.env"
+        execute :cp, "#{env_config} ./.env"
+      end
+    end
+  end
   desc 'Restart application'
   task :restart do
-    invoke 'unicorn:restart'
-  end
-  desc 'Create database'
-  task :db_create do
-    on roles(:db) do |host|
-      with rails_env: fetch(:rails_env) do
-        within current_path do
-          execute :bundle, :exec, :rake, 'db:create'
-        end
-      end
+    on roles(:app), in: :sequence, wait: 5 do
+      invoke 'unicorn:start'
     end
   end
-  desc 'Run seed'
-  task :seed do
-    on roles(:app) do
-      with rails_env: fetch(:rails_env) do
-        within current_path do
-          execute :bundle, :exec, :rake, 'db:seed'
-        end
-      end
-    end
-  end
+
   after :publishing, :restart
+  before :updated, :set_env_values
+
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
       # Here we can do anything such as:
@@ -76,3 +70,6 @@ namespace :deploy do
     end
   end
 end
+
+# before "deploy:updated", "deploy:set_env_values"
+# after "deploy:publishing", "deploy:restart"

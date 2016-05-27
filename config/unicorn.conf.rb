@@ -1,11 +1,19 @@
 # set lets
 $worker  = 2
 $timeout = 30
-$app_path = "/var/www/rails/Capistrano/current"
-$app_dir = "/var/www/rails/Capistrano"
-$listen  = File.expand_path 'shared/tmp/sockets/.unicorn.sock', $app_dir
-$pid     = File.expand_path 'shared/tmp/pids/unicorn.pid', $app_dir
-$std_log = File.expand_path 'shared/log/unicorn.log', $app_dir
+
+$shared_path = "/var/www/rails/Capistrano/shared/"
+$current_path = "/var/www/rails/Capistrano/current"
+
+$listen = File.expand_path('tmp/sockets/unicorn.sock', $shared_path)
+$pid = File.expand_path('tmp/pids/unicorn.pid', $shared_path)
+$std_log = File.expand_path('log/unicorn.log', $shared_path)
+
+# $app_path = "/var/www/rails/Capistrano/current"
+# $app_dir = "/var/www/rails/Capistrano"
+# $listen  = File.expand_path 'shared/tmp/sockets/.unicorn.sock', $app_dir
+# $pid     = File.expand_path 'shared/tmp/pids/unicorn.pid', $app_dir
+# $std_log = File.expand_path 'shared/log/unicorn.log', $app_dir
 
 # set config
 worker_processes  $worker

@@ -45,14 +45,14 @@ set :unicorn_config_path, "config/unicorn.conf.rb"
 
 namespace :deploy do
   desc "Set Environment Values"
-  task :set_env_values do
-    on roles(:all) do
-      within release_path do
-        env_config = "/var/www/rails/Capistrano/shared/.env"
-        execute :cp, "#{env_config} ./.env"
-      end
-    end
-  end
+  # task :set_env_values do
+  #   on roles(:all) do
+  #     within release_path do
+  #       env_config = "/var/www/rails/Capistrano/shared/.env"
+  #       execute :cp, "#{env_config} ./.env"
+  #     end
+  #   end
+  # end
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
@@ -61,7 +61,7 @@ namespace :deploy do
   end
 
   after :publishing, :restart
-  before :updated, :set_env_values
+  # before :updated, :set_env_values
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do

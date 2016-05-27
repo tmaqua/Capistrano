@@ -17,7 +17,7 @@ $std_log = File.expand_path('log/unicorn.log', $shared_path)
 
 # set config
 worker_processes  $worker
-working_directory $app_path
+working_directory $current_path
 stderr_path $std_log
 stdout_path $std_log
 timeout $timeout

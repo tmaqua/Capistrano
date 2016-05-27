@@ -1,7 +1,8 @@
 namespace :unicorn do
   desc 'Start unicorn'
   task(:start) do
-    config_path = "#{Rails.root}/config/unicorn.conf.rb"
+    root_path = "/var/www/rails/Capistrano/current"
+    config_path = "#{root_path}/config/unicorn.conf.rb"
     sh "bundle exec unicorn_rails -c #{config_path} -E production -p 8080 -D"
   end
 

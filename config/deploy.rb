@@ -44,15 +44,14 @@ set :unicorn_pid, -> { "#{shared_path}/tmp/pids/unicorn.pid" }
 set :unicorn_config_path, "config/unicorn.conf.rb"
 
 namespace :deploy do
-  desc "Set Environment Values"
-  # task :set_env_values do
-  #   on roles(:all) do
-  #     within release_path do
-  #       env_config = "/var/www/rails/Capistrano/shared/.env"
-  #       execute :cp, "#{env_config} ./.env"
-  #     end
-  #   end
-  # end
+
+  desc 'Upload env'
+  task :upload do
+    on roles(:app) do |host|
+      upload!('.env', "#{shared_path}/.env")
+    end
+  end
+
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
@@ -60,15 +59,22 @@ namespace :deploy do
     end
   end
 
+  desc 'db_seed must be run only one time right after the first deploy'
+  task :db_seed do
+    on roles(:db) do |host|
+      within current_path do
+        with rails_env: fetch(:rails_env) do
+          execute :rake, 'db:seed'
+        end
+      end
+    end
+  end
+
   after :publishing, :restart
-  # before :updated, :set_env_values
+  before :starting, :upload
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
-      # Here we can do anything such as:
-      # within release_path do
-      #   execute :rake, 'cache:clear'
-      # end
     end
   end
 end

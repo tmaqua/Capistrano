@@ -2,7 +2,7 @@ lock '3.4.0'
 
 set :application, "Capistrano"
 # set :repo_url, "git@github.com:tmaqua/Capistrano.git"
-set :repo_url, "https://gitlab.planningdev.com/murakami/Capistrano.git"
+set :repo_url, "https://murakami:rrskmz36@gitlab.planningdev.com/murakami/Capistrano.git"
 set :branch, "master"
 set :deploy_to, "/var/www/rails/Capistrano"
 

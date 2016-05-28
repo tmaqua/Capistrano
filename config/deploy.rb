@@ -2,6 +2,7 @@ lock '3.4.0'
 
 set :application, "Capistrano"
 set :repo_url, "git@github.com:tmaqua/Capistrano.git"
+# set :repo_url, "https://gitlab.planningdev.com/murakami/Capistrano.git"
 set :branch, "master"
 set :deploy_to, "/var/www/rails/Capistrano"
 
@@ -20,6 +21,7 @@ set :deploy_to, "/var/www/rails/Capistrano"
 # Default value for :linked_files is []
 # set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
 # set :linked_files, fetch(:linked_files, []).push('config/settings/production.yml')
+set :linked_files, fetch(:linked_files, []).push('.env')
 
 # Default value for linked_dirs is []
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
@@ -42,15 +44,14 @@ set :unicorn_pid, -> { "#{shared_path}/tmp/pids/unicorn.pid" }
 set :unicorn_config_path, "config/unicorn.conf.rb"
 
 namespace :deploy do
-  desc "Set Environment Values"
-  task :set_env_values do
-    on roles(:all) do
-      within release_path do
-        env_config = "/var/www/rails/Capistrano/shared/.env"
-        execute :cp, "#{env_config} ./.env"
-      end
+
+  desc 'Upload env'
+  task :upload do
+    on roles(:app) do |host|
+      upload!('.env', "#{shared_path}/.env")
     end
   end
+
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
@@ -58,15 +59,22 @@ namespace :deploy do
     end
   end
 
+  desc 'db_seed must be run only one time right after the first deploy'
+  task :db_seed do
+    on roles(:db) do |host|
+      within current_path do
+        with rails_env: fetch(:rails_env) do
+          execute :rake, 'db:seed'
+        end
+      end
+    end
+  end
+
   after :publishing, :restart
-  before :updated, :set_env_values
+  after "deploy:check:linked_dirs", :upload
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do
-      # Here we can do anything such as:
-      # within release_path do
-      #   execute :rake, 'cache:clear'
-      # end
     end
   end
 end

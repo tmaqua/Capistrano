@@ -21,6 +21,7 @@ gem 'unicorn-worker-killer'
 gem 'slim-rails'
 gem 'config'
 gem 'dotenv-rails'
+gem 'aws-sdk', '~> 2'
 
 group :production do
   gem 'mysql2', '~> 0.3.20'
@@ -32,6 +33,7 @@ group :production, :staging do
   gem 'capistrano-rails'
   gem 'capistrano-rbenv'
   gem 'capistrano3-unicorn'
+  gem 'capistrano-ami', require: false
 end
 
 group :development, :test do

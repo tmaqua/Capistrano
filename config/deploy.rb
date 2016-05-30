@@ -1,3 +1,7 @@
+require 'dotenv'
+require 'aws-sdk'
+Dotenv.load
+
 lock '3.4.0'
 
 set :application, "Capistrano"
@@ -43,14 +47,13 @@ set :rbenv_roles, :all
 set :unicorn_pid, -> { "#{shared_path}/tmp/pids/unicorn.pid" }
 set :unicorn_config_path, "config/unicorn.conf.rb"
 
-namespace :deploy do
+set :aws_region, 'ap-northeast-1'
+set :base_ami_name, 'Template'
+set :keep_amis, 3 
+set :aws_access_key_id, ENV['AWS_ACCESS_KEY_ID']
+set :aws_secret_access_key, ENV['AWS_SECRET_ACCESS_KEY']  
 
-  desc 'Upload env'
-  task :upload do
-    on roles(:app) do |host|
-      upload!('.env', "#{shared_path}/.env")
-    end
-  end
+namespace :deploy do
 
   desc 'Restart application'
   task :restart do
@@ -59,19 +62,7 @@ namespace :deploy do
     end
   end
 
-  desc 'db_seed must be run only one time right after the first deploy'
-  task :db_seed do
-    on roles(:db) do |host|
-      within current_path do
-        with rails_env: fetch(:rails_env) do
-          execute :rake, 'db:seed'
-        end
-      end
-    end
-  end
-
   after :publishing, :restart
-  # after "deploy:check:linked_dirs", :upload
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do

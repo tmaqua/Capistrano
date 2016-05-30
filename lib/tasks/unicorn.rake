@@ -1,36 +1,16 @@
-# namespace :unicorn do
-#   desc 'Start unicorn'
-#   task(:start) do
-#     root_path = "/var/www/rails/Capistrano/current"
-#     config_path = "#{root_path}/config/unicorn.conf.rb"
-#     sh "bundle exec unicorn_rails -c #{config_path} -E production -p 8080 -D"
-#   end
+require 'dotenv'
+require 'aws-sdk'
+Dotenv.load
 
-#   desc 'Stop unicorn'
-#   task(:stop) { unicorn_signal(:QUIT) }
+namespace :aws do
+  desc 'get ec2 list'
+  task(:ec2) do
+    ec2 = Aws::EC2::Client.new(
+      access_key_id: ENV['AWS_ACCESS_KEY_ID'],
+      secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'],
+      region: ENV['AWS_REGION']
+    )
+    ec2.start_instances(instance_ids: ['i-c2b29567'])
+  end
+end
 
-#   desc 'Restart unicorn with USR2'
-#   task(:restart) { unicorn_signal(:USR2) }
-
-#   desc 'Increment number of worker processes'
-#   task(:increment) { unicorn_signal(:TTIN) }
-
-#   desc 'Decrement number of worker processes'
-#   task(:decrement) { unicorn_signal(:TTOU) }
-
-#   desc 'Unicorn pstree (depends on pstree command)'
-#   task(:pstree) do
-#     sh "pstree '#{unicorn_pid}'"
-#   end
-# end
-
-# # Helpers
-# def unicorn_signal(signal)
-#   Process.kill signal, unicorn_pid
-# end
-
-# def unicorn_pid
-#   File.read('/var/www/rails/Capistrano/shared/tmp/pids/unicorn.pid').to_i
-# rescue Errno::ENOENT
-#   raise 'Unicorn does not seem to be running'
-# end

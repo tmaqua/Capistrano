@@ -14,12 +14,7 @@ set :ssh_options, {
     auth_methods: %w(publickey)
   }
 
-set :aws_region, ENV["AWS_REGION"]
-set :base_ami_name, 'Template'
-set :keep_amis, 5
 
-set :aws_access_key_id, ENV["AWS_ACCESS_KEY"]
-set :aws_access_secret_key, ENV["AWS_ACCESS_SECRET_KEY"]
 
 # role-based syntax
 # ==================

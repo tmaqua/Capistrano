@@ -1,3 +1,7 @@
+require 'dotenv'
+require 'aws-sdk'
+Dotenv.load
+
 lock '3.4.0'
 
 set :application, "Capistrano"
@@ -42,6 +46,12 @@ set :rbenv_roles, :all
 
 set :unicorn_pid, -> { "#{shared_path}/tmp/pids/unicorn.pid" }
 set :unicorn_config_path, "config/unicorn.conf.rb"
+
+set :aws_region, 'ap-northeast-1'
+set :base_ami_name, 'Template'
+set :keep_amis, 3 
+set :aws_access_key_id, ENV['AWS_ACCESS_KEY_ID']
+set :aws_secret_access_key, ENV['AWS_SECRET_ACCESS_KEY']  
 
 namespace :deploy do
 

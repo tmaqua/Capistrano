@@ -55,13 +55,6 @@ set :aws_secret_access_key, ENV['AWS_SECRET_ACCESS_KEY']
 
 namespace :deploy do
 
-  desc 'Upload env'
-  task :upload do
-    on roles(:app) do |host|
-      upload!('.env', "#{shared_path}/.env")
-    end
-  end
-
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
@@ -69,19 +62,7 @@ namespace :deploy do
     end
   end
 
-  desc 'db_seed must be run only one time right after the first deploy'
-  task :db_seed do
-    on roles(:db) do |host|
-      within current_path do
-        with rails_env: fetch(:rails_env) do
-          execute :rake, 'db:seed'
-        end
-      end
-    end
-  end
-
   after :publishing, :restart
-  # after "deploy:check:linked_dirs", :upload
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do

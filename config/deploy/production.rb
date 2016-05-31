@@ -7,7 +7,9 @@
 # server 'example.com', user: 'deploy', roles: %w{app web}, other_property: :other_value
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
+require 'dotenv'
 require 'aws-sdk'
+Dotenv.load
 
 elb = Aws::ElasticLoadBalancing::Client.new(
   region: ENV["AWS_REGION"],

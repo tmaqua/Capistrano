@@ -34,6 +34,7 @@ group :production, :staging do
   gem 'capistrano-rbenv'
   gem 'capistrano3-unicorn'
   gem 'capistrano-ami', require: false
+  gem 'capistrano3-delayed-job', '~> 1.0'
 end
 
 group :development, :test do

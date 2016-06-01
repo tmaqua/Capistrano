@@ -32,6 +32,9 @@ module Template
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
+    # Delayed_job is jobs queue worker
+    config.active_job.queue_adapter = :delayed_job
+
     config.generators do |g|
       g.javascripts false
       g.stylesheets false

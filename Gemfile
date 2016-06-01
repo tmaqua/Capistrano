@@ -34,6 +34,7 @@ group :production, :staging do
   gem 'capistrano-rbenv'
   gem 'capistrano3-unicorn'
   gem 'capistrano-ami', require: false
+  gem 'capistrano3-delayed-job', '~> 1.0'
 end
 
 group :development, :test do
@@ -46,11 +47,18 @@ group :development, :test do
   gem 'factory_girl_rails'
 end
 
+#--------------------------------------
+# Add 
+#--------------------------------------
+
+gem 'delayed_job', '~> 4.1.1'
+gem 'delayed_job_active_record', '~> 4.1.0'
+gem 'daemons', '~> 1.2.3'
+
+
 #------------------
 # No Use
 #------------------
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development

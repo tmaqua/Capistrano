@@ -1,8 +1,5 @@
 h1 Welcome#index
 p Find me in app/views/welcome/index.html.slim
 
-p Instance 1
-p Instance 2
-
-p ToELB Deploy
-p CircleCI Deploy
+p メールを送る
+= link_to '送信', mail_send_mail_path

@@ -6,7 +6,6 @@ lock '3.4.0'
 
 set :application, "Capistrano"
 set :repo_url, "git@github.com:tmaqua/Capistrano.git"
-# set :repo_url, "https://gitlab.planningdev.com/murakami/Capistrano.git"
 set :branch, "master"
 set :deploy_to, "/var/www/rails/Capistrano"
 
@@ -23,8 +22,6 @@ set :deploy_to, "/var/www/rails/Capistrano"
 # set :pty, true
 
 # Default value for :linked_files is []
-# set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
-# set :linked_files, fetch(:linked_files, []).push('config/settings/production.yml')
 set :linked_files, fetch(:linked_files, []).push('.env')
 
 # Default value for linked_dirs is []
@@ -37,10 +34,8 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', '
 set :keep_releases, 5
 
 set :rbenv_ruby, '2.2.0'
-# set :rbenv_path, '/home/fankami/.rbenv'
 set :rbenv_type, :user
 set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
-# set :rbenv_prefix, "#{fetch(:rbenv_path)}/bin/rbenv exec"
 set :rbenv_map_bins, %w{rake gem bundle ruby rails}
 set :rbenv_roles, :all
 
@@ -51,7 +46,10 @@ set :aws_region, 'ap-northeast-1'
 set :base_ami_name, 'Template'
 set :keep_amis, 3 
 set :aws_access_key_id, ENV['AWS_ACCESS_KEY_ID']
-set :aws_secret_access_key, ENV['AWS_SECRET_ACCESS_KEY']  
+set :aws_secret_access_key, ENV['AWS_SECRET_ACCESS_KEY'] 
+
+set :delayed_job_workers, 2
+set :delayed_job_roles, [:app] 
 
 namespace :deploy do
 
@@ -63,6 +61,7 @@ namespace :deploy do
   end
 
   after :publishing, :restart
+  after :published, 'delayed_job:restart'
 
   after :restart, :clear_cache do
     on roles(:web), in: :groups, limit: 3, wait: 10 do

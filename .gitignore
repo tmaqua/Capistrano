@@ -57,3 +57,7 @@ public/uploads/*
 # Environment Variables
 .rbenv-vars
 .env
+
+# Certificate file for push notificate
+/certificate
+*.pem

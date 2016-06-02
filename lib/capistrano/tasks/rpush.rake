@@ -6,7 +6,7 @@ namespace :rpush do
   def start_rpush
     within current_path do
       with rails_env: fetch(:rails_env) do
-          execute :bundle, :exec, :rpush, :start, "-e #{fetch(:rails_env)}"
+        execute :bundle, :exec, :rpush, :start, "-e #{fetch(:rails_env)}"
       end
     end
   end
@@ -23,6 +23,7 @@ namespace :rpush do
   def rpush_process_exists?
     test("[ -f #{fetch(:rpush_pid)} ]")
   end
+
 
   desc 'Install rpush settings to DB'
   task :install => :environment do
@@ -53,6 +54,7 @@ namespace :rpush do
   task :restart => :environment do
     on roles(:app) do
       if rpush_process_exists?
+        execute "rm #{fetch(:rpush_pid)}"
         reload_rpush
       else
         start_rpush

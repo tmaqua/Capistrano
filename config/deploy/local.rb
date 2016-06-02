@@ -6,4 +6,5 @@ set :rails_env, :production
 
 set :ssh_options, {
   keys: %w(~/.ssh/id_for_localhost),
+  auth_methods: %w(publickey)
 }

@@ -17,7 +17,9 @@ namespace :rpush do
   end
 
   def reload_rpush
-    execute :kill, "-s HUP $(< #{fetch(:rpush_pid)})"
+    # execute :kill, "-s HUP $(< #{fetch(:rpush_pid)})"
+    execute "rm #{fetch(:rpush_pid)}"
+    execute "if ps ax| grep rpush| grep -v grep; then kill -s HUP $(< #{fetch(:rpush_pid)}) ; fi"
   end
 
   def rpush_process_exists?
@@ -54,7 +56,6 @@ namespace :rpush do
   task :restart => :environment do
     on roles(:app) do
       if rpush_process_exists?
-        execute "rm #{fetch(:rpush_pid)}"
         reload_rpush
       else
         start_rpush

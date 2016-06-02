@@ -5,7 +5,7 @@ namespace :push do
     
   desc "rpush certificate file install"
   task :install => :environment do 
-    app_name = 'capistrano'
+    app_name = ENV['APN_NAME']
     apns_env = ENV['APN_ENV'] ? ENV['APN_ENV'] : (Rails.env.production? ? 'production' : 'sandbox')
 
     if Rpush::Apns::App.where(name: app_name, environment: apns_env).exists?
@@ -26,7 +26,7 @@ namespace :push do
 
   desc "rpush certificate file uninstall"
   task :uninstall => :environment do 
-    app_name = 'capistrano'
+    app_name = ENV['APN_NAME']
     apns_env = ENV['APN_ENV'] ? ENV['APN_ENV'] : (Rails.env.production? ? 'production' : 'sandbox')
 
     if Rpush::Apns::App.where(name: app_name, environment: apns_env).exists?

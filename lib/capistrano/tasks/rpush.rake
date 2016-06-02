@@ -21,7 +21,7 @@ namespace :rpush do
   end
 
   def rpush_process_exists?
-    test("[ -f #{fetch(:rpush_pid)} ]")
+    test("[ -e #{fetch(:rpush_pid)} ]")
   end
 
 

@@ -36,6 +36,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    ansi (1.5.0)
     arel (6.0.3)
     aws-sdk (2.3.9)
       aws-sdk-resources (= 2.3.9)
@@ -125,6 +126,7 @@ GEM
     minitest (5.8.3)
     multi_json (1.11.2)
     mysql2 (0.3.20)
+    net-http-persistent (2.9.4)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (3.0.1)
@@ -162,6 +164,13 @@ GEM
     rdoc (4.2.1)
       json (~> 1.4)
     ref (2.0.0)
+    rpush (2.7.0)
+      activesupport
+      ansi
+      multi_json (~> 1.0)
+      net-http-persistent
+      railties
+      thor (>= 0.18.1, < 2.0)
     rspec-core (3.4.1)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
@@ -262,6 +271,7 @@ DEPENDENCIES
   json_expressions
   mysql2 (~> 0.3.20)
   rails (= 4.2.3)
+  rpush
   rspec-rails
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)

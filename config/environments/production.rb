@@ -89,4 +89,6 @@ Rails.application.configure do
     authentication: 'plain',
     ssl: true
   }
+
+  GA.tracker = ENV["GOOGLE_ANALYTICS_TRACKING_ID"]
 end
